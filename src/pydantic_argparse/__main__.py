@@ -1,12 +1,22 @@
 import argparse
+from typing import Optional
+
+import pydantic
 
 
-def parse_args() -> argparse.Namespace:
+class Args(pydantic.BaseModel):
+    model_config = pydantic.ConfigDict(from_attributes=True)
+
+    foo: int = 42
+    bar: Optional[str]
+
+
+def parse_args() -> Args:
     parser = argparse.ArgumentParser()
     parser.add_argument('--foo', type=int, default=42)
     parser.add_argument('--bar')
 
-    return parser.parse_args()
+    return Args.model_validate(parser.parse_args())
 
 
 def main():
